@@ -1,5 +1,14 @@
 package com.vuquochung.foodapp.Common;
 
+import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
+import android.text.style.TypefaceSpan;
+import android.widget.TextView;
+
 import com.vuquochung.foodapp.Model.AddonModel;
 import com.vuquochung.foodapp.Model.CategoryModel;
 import com.vuquochung.foodapp.Model.FoodModel;
@@ -60,5 +69,15 @@ public class Common {
             }
             return result;
         }
+    }
+
+    public static void setSpanString(String welcome, String name, TextView textView) {
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(welcome);
+        SpannableString spannableString = new SpannableString(name);
+        StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
+        spannableString.setSpan(boldSpan, 0,name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        builder.append(spannableString);
+        textView.setText(builder,TextView.BufferType.SPANNABLE);
     }
 }

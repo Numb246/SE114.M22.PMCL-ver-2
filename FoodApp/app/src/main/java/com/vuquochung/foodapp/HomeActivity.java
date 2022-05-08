@@ -1,10 +1,13 @@
 package com.vuquochung.foodapp;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andremion.counterfab.CounterFab;
@@ -12,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -19,6 +23,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.vuquochung.foodapp.Common.Common;
 import com.vuquochung.foodapp.Database.CartDataSource;
 import com.vuquochung.foodapp.Database.CartDatabase;
@@ -86,6 +91,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         NavigationUI.setupWithNavController(navigationView, navController);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.bringToFront();
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView txt_user = (TextView) headerView.findViewById(R.id.txt_user);
+        Common.setSpanString("Hey, ",Common.currentUser.getName(), txt_user);
+
+
         countCartItem();
 
     }
@@ -115,14 +126,41 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_menu:
                 navController.navigate(R.id.nav_menu);
                 break;
-            case R.id.nav_foodlist:
-                navController.navigate(R.id.nav_foodlist);
+            case R.id.nav_sign_out:
+                signOut();
                 break;
             case R.id.nav_cart:
                 navController.navigate(R.id.nav_cart);
 
         }
         return true;
+    }
+
+    private void signOut() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Signout")
+                .setMessage("Do you want to sign out?")
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Common.selectedFood = null;
+                Common.categorySelected = null;
+                Common.currentUser = null;
+                FirebaseAuth.getInstance().signOut();
+
+                Intent intent = new Intent(HomeActivity.this,MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override
