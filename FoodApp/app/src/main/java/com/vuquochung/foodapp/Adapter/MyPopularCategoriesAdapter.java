@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.vuquochung.foodapp.Callback.IRecyclerClickListener;
 import com.vuquochung.foodapp.Model.PopularCategoryModel;
 import com.vuquochung.foodapp.R;
 
@@ -40,6 +42,8 @@ public class MyPopularCategoriesAdapter extends RecyclerView.Adapter<MyPopularCa
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Glide.with(context).load(popularCategoryModelList.get(position).getImage()).into(holder.category_image);
         holder.txt_category_name.setText(popularCategoryModelList.get(position).getName());
+        holder.setListener((view, pos) -> Toast.makeText(context, "" + popularCategoryModelList.get(pos).getName(),Toast.LENGTH_SHORT).show());
+//        tuong tu nhu ham binh thuong
     }
 
     @Override
@@ -47,16 +51,28 @@ public class MyPopularCategoriesAdapter extends RecyclerView.Adapter<MyPopularCa
         return popularCategoryModelList.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         Unbinder unbinder;
         @BindView(R.id.txt_category_name)
         TextView txt_category_name;
         @BindView(R.id.category_image)
         CircleImageView category_image;
 
+        IRecyclerClickListener listener;
+
+        public void setListener(IRecyclerClickListener listener) {
+            this.listener = listener;
+        }
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             unbinder= ButterKnife.bind(this,itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            listener.onItemClickListener(view, getAdapterPosition());
         }
     }
 }
