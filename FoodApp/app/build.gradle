@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.vuquochung.foodapp"
-        minSdk 21
+        minSdk 31
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -76,4 +76,7 @@ dependencies {
     annotationProcessor 'androidx.room:room-compiler:2.2.0-rc01'
 
     implementation 'com.github.andremion:counterfab:1.2.2-alpha1'
+
+    implementation 'com.karumi:dexter:6.2.3'
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
 }

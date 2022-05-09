@@ -6,7 +6,8 @@ package com.vuquochung.foodapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-        import android.content.DialogInterface;
+import android.Manifest;
+import android.content.DialogInterface;
         import android.os.Bundle;
 
         import androidx.annotation.NonNull;
@@ -22,7 +23,13 @@ import androidx.appcompat.app.AppCompatActivity;
         import android.widget.EditText;
         import android.widget.Toast;
 
-        import com.vuquochung.foodapp.Common.Common;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
+import com.vuquochung.foodapp.Common.Common;
         import com.vuquochung.foodapp.Model.UserModel;
         import com.firebase.ui.auth.AuthUI;
         import com.firebase.ui.auth.IdpResponse;
@@ -86,20 +93,36 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         dialog = new SpotsDialog.Builder().setCancelable(false).setContext(this).build();
 
-        listener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+        listener = firebaseAuth -> {
 
-                if (user != null) {
-                    //Account is already logged in
-                    CheckUserFromFirebase(user);
-                    // Toast.makeText(MainActivity.this, "Already Logged In", Toast.LENGTH_SHORT).show();
-                } else {
-                    phoneLogIn();
+            Dexter.withActivity(this)
+                    .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                    .withListener(new PermissionListener() {
+                        @Override
+                        public void onPermissionGranted(PermissionGrantedResponse response) {
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
 
-                }
-            }
+                            if (user != null) {
+                                //Account is already logged in
+                                CheckUserFromFirebase(user);
+                                // Toast.makeText(MainActivity.this, "Already Logged In", Toast.LENGTH_SHORT).show();
+                            } else {
+                                phoneLogIn();
+
+                            }
+                        }
+
+                        @Override
+                        public void onPermissionDenied(PermissionDeniedResponse response) {
+                            Toast.makeText(MainActivity.this, "You must enable this permission to use app", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+                        }
+                    }).check();
+
         };
     }
 

@@ -2,6 +2,8 @@ package com.vuquochung.foodapp.ui.cart;
 
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationRequest;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -30,6 +32,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.vuquochung.foodapp.Adapter.MyCartAdapter;
 import com.vuquochung.foodapp.Adapter.MyFoodListAdapter;
 import com.vuquochung.foodapp.Common.Common;
@@ -50,6 +54,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,10 +65,17 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+
 public class CartFragment extends Fragment {
     private Parcelable recyclerViewState;
     private CartDataSource cartDataSource;
     private CartViewModel cartViewModel;
+
+    LocationRequest locationRequest;
+    LocationCallback locationCallback;
+    FusedLocationProviderClient fusedLocationProviderClient;
+    Location currentLocation;
+
     @BindView(R.id.recycler_cart)
     RecyclerView recycler_cart;
     @BindView(R.id.txt_total_price)
@@ -81,6 +93,8 @@ public class CartFragment extends Fragment {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_place_order,null);
 
         EditText edt_address = (EditText)view.findViewById(R.id.edt_address);
+        EditText edt_comment = (EditText)view.findViewById(R.id.edt_comment);
+        TextView txt_address = (TextView)view.findViewById(R.id.txt_address_detail);
         RadioButton rdi_home = (RadioButton)view.findViewById(R.id.rdi_home_address);
         RadioButton rdi_other_address = (RadioButton)view.findViewById(R.id.rdi_other_address);
         RadioButton rdi_ship_to_this = (RadioButton)view.findViewById(R.id.rdi_ship_this_address);
@@ -151,8 +165,21 @@ public class CartFragment extends Fragment {
         });
         unbinder=ButterKnife.bind(this,root);
         initViews();
+//        initLocation();
         return root;
     }
+
+//    private void initLocation() {
+//        buildLocationRequest();
+//    }
+//
+//    private void buildLocationRequest() {
+//        locationRequest = new LocationRequest.Builder(long intervalMillis);
+//        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//        locationRequest.setInterval(5000);
+//        locationRequest.setFastestInterval(3000);
+//        locationRequest.setSmallestDisplacement(10f);
+//    }
 
     private void initViews() {
         setHasOptionsMenu(true);
