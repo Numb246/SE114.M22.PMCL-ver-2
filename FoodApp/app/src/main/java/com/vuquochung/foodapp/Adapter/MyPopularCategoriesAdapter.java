@@ -12,8 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.vuquochung.foodapp.Callback.IRecyclerClickListener;
+import com.vuquochung.foodapp.EventBus.PopularCategoryClick;
 import com.vuquochung.foodapp.Model.PopularCategoryModel;
 import com.vuquochung.foodapp.R;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -42,7 +45,8 @@ public class MyPopularCategoriesAdapter extends RecyclerView.Adapter<MyPopularCa
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Glide.with(context).load(popularCategoryModelList.get(position).getImage()).into(holder.category_image);
         holder.txt_category_name.setText(popularCategoryModelList.get(position).getName());
-        holder.setListener((view, pos) -> Toast.makeText(context, "" + popularCategoryModelList.get(pos).getName(),Toast.LENGTH_SHORT).show());
+        holder.setListener((view, pos) ->
+                EventBus.getDefault().postSticky(new PopularCategoryClick(popularCategoryModelList.get(pos))));
 //        tuong tu nhu ham binh thuong
     }
 
