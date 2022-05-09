@@ -1,5 +1,6 @@
 package com.vuquochung.foodapp.ui.cart;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -12,10 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -48,6 +53,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -66,6 +72,51 @@ public class CartFragment extends Fragment {
     TextView txt_empty_cart;
     @BindView(R.id.group_place_holder)
     CardView group_place_holder;
+
+    @OnClick(R.id.btn_place_order)
+    void onPlaceOrderClick() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("One more step!");
+
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_place_order,null);
+
+        EditText edt_address = (EditText)view.findViewById(R.id.edt_address);
+        RadioButton rdi_home = (RadioButton)view.findViewById(R.id.rdi_home_address);
+        RadioButton rdi_other_address = (RadioButton)view.findViewById(R.id.rdi_other_address);
+        RadioButton rdi_ship_to_this = (RadioButton)view.findViewById(R.id.rdi_ship_this_address);
+        RadioButton rdi_cod = (RadioButton)view.findViewById(R.id.rdi_cod);
+        RadioButton rdi_braintree = (RadioButton)view.findViewById(R.id.rdi_braintree);
+
+        edt_address.setText(Common.currentUser.getAddress());
+        //Mặc định chọn home address, nên sẽ xuất hiện địa chỉ
+
+        rdi_home.setOnCheckedChangeListener((compoundButton, b) -> {
+            if(b){
+                edt_address.setText(Common.currentUser.getAddress());
+            }
+        });
+        rdi_other_address.setOnCheckedChangeListener((compoundButton, b) -> {
+            if(b){
+                edt_address.setText(""); // xóa thông tin
+//                edt_address.setHint("Enter your address");
+            }
+        });
+        rdi_ship_to_this.setOnCheckedChangeListener((compoundButton, b) -> {
+            if(b){
+                Toast.makeText(getContext(), "Implement late with Google API", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setView(view);
+        builder.setNegativeButton("NO", (dialogInterface, i) -> {
+             dialogInterface.dismiss();
+        }).setPositiveButton("YES", (dialogInterface, i) -> {
+            Toast.makeText(getContext(), "Implement late!", Toast.LENGTH_SHORT).show();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
     private MyCartAdapter adapter;
     private Unbinder unbinder;
@@ -157,7 +208,7 @@ public class CartFragment extends Fragment {
 
                     @Override
                     public void onSuccess(Double aDouble) {
-                        txt_total_price.setText(new StringBuilder("Total: ").append(Common.formatPrice(aDouble)));
+                        txt_total_price.setText(new StringBuilder("Total: $").append(Common.formatPrice(aDouble)));
 
                     }
 
@@ -269,7 +320,7 @@ public class CartFragment extends Fragment {
 
                     @Override
                     public void onSuccess(Double price) {
-                        txt_total_price.setText(new StringBuilder("Total: ").append(Common.formatPrice(price)));
+                        txt_total_price.setText(new StringBuilder("Total: $").append(Common.formatPrice(price)));
                     }
 
                     @Override
