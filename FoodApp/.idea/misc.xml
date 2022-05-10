@@ -23,6 +23,7 @@
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_chip_with_delete_icon.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_comment_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_food_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_place_order.xml" value="0.33" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_popular_categories.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_popular_categories_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_rating.xml" value="0.36666666666666664" />
@@ -30,16 +31,6 @@
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/nav_header_home.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/menu/activity_main_drawer.xml" value="0.5" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/menu/cart_menu.xml" value="0.1" />
-        <entry key="..\:/Users/HP/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/drawable/side_nav_bar.xml" value="0.263" />
-        <entry key="..\:/Users/HP/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/activity_home.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/HP/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/app_bar_home.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/HP/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/bottom_sheet_comment_fragment.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/HP/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/content_home.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/HP/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/fragment_cart.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/HP/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/fragment_food_detail.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/HP/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_place_order.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/HP/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/nav_header_home.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/HP/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/menu/activity_main_drawer.xml" value="0.27447916666666666" />
       </map>
     </option>
   </component>
