@@ -485,7 +485,7 @@ public class CartFragment extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            Toast.makeText(getContext(),   e.getMessage()+"", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(),   ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
             return true;
