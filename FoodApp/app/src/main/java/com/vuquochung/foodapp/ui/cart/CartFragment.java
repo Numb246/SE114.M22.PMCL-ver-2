@@ -45,6 +45,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.FirebaseDatabase;
 import com.vuquochung.foodapp.Adapter.MyCartAdapter;
 import com.vuquochung.foodapp.Adapter.MyFoodListAdapter;
 import com.vuquochung.foodapp.Common.Common;
@@ -57,6 +58,7 @@ import com.vuquochung.foodapp.EventBus.CounterCartEvent;
 import com.vuquochung.foodapp.EventBus.HideFABCart;
 import com.vuquochung.foodapp.EventBus.UpdateItemInCart;
 import com.vuquochung.foodapp.Model.FoodModel;
+import com.vuquochung.foodapp.Model.Order;
 import com.vuquochung.foodapp.R;
 import com.vuquochung.foodapp.ui.foodlist.FoodListViewModel;
 
@@ -75,12 +77,16 @@ import butterknife.Unbinder;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 
 public class CartFragment extends Fragment {
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
     private Parcelable recyclerViewState;
     private CartDataSource cartDataSource;
     private CartViewModel cartViewModel;
@@ -188,11 +194,101 @@ public class CartFragment extends Fragment {
         builder.setNegativeButton("NO", (dialogInterface, i) -> {
             dialogInterface.dismiss();
         }).setPositiveButton("YES", (dialogInterface, i) -> {
-            Toast.makeText(getContext(), "Implement late!", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(getContext(), "Implement late!", Toast.LENGTH_SHORT).show();
+            if(rdi_cod.isChecked()) {
+                paymentCOD(edt_address.getText().toString(),edt_address.getText().toString());
+            }
         });
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void paymentCOD(String address, String comment) {
+        compositeDisposable.add(cartDataSource.getAllCart(Common.currentUser.getUid())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(cartItems -> {
+            //when we have all cartItems, we will get total price
+            cartDataSource.sumPriceInCart(Common.currentUser.getUid())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new SingleObserver<Double>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(Double totalPrice) {
+                            double finalPrice = totalPrice;
+                            Order order = new Order();
+                            order.setUseId(Common.currentUser.getUid());
+                            order.setUserName(Common.currentUser.getName());
+                            order.setUserPhone(Common.currentUser.getPhone());
+                            order.setShippingAddress(address);
+                            order.setComment(comment);
+                            if(currentLocation != null) {
+                                order.setLat(currentLocation.getLatitude());
+                                order.setLng(currentLocation.getLongitude());
+                            }
+                            else {
+                                order.setLat(-0.1f);
+                                order.setLng(-0.1f);
+                            }
+
+                            order.setCartItemList(cartItems);
+                            order.setTotalPayment(totalPrice);
+                            order.setDiscount(0);
+                            order.setFinalPayment(finalPrice);
+                            order.setCod(true);
+                            order.setTransactionId("Cash On Delivery");
+
+                            //Submit this order to FireBase
+                            writeOrderToFirebase(order);
+                        }
+
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+        }, throwable -> {
+            Toast.makeText(getContext(), ""+throwable.getMessage(), Toast.LENGTH_SHORT).show();
+        }));
+    }
+
+    private void writeOrderToFirebase(Order order) {
+        FirebaseDatabase.getInstance()
+                .getReference(Common.ORDER_REF)
+                .child(Common.createOrderNumber())
+                .setValue(order)
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                }).addOnCompleteListener(task -> {
+                    //write success
+                    cartDataSource.cleanCart(Common.currentUser.getUid())
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new SingleObserver<Integer>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onSuccess(Integer integer) {
+                                    Toast.makeText(getContext(), "Order placed successfully", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                });
     }
 
     private String getAddressFromLatLng(double latitude, double longitude) {
@@ -412,6 +508,7 @@ public class CartFragment extends Fragment {
             EventBus.getDefault().unregister(this);
         if (fusedLocationProviderClient != null)
             fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        compositeDisposable.clear();
         super.onStop();
     }
 
