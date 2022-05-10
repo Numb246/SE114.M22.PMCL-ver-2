@@ -353,12 +353,12 @@ public class FoodDetailFragment extends Fragment implements TextWatcher {
                         foodModel.setRatingCount(0l);
                     double sumRating=foodModel.getRatingValue()+ratingValue;
                     long ratingCount=foodModel.getRatingCount()+1;
-                    double result=sumRating/ratingCount;
+
                     Map<String,Object> updateData=new HashMap<>();
-                    updateData.put("ratingValue",result);
+                    updateData.put("ratingValue",sumRating);
                     updateData.put("ratingCount",ratingCount);
 
-                    foodModel.setRatingValue(result);
+                    foodModel.setRatingValue(sumRating);
                     foodModel.setRatingCount(ratingCount);
                     snapshot.getRef().updateChildren(updateData).addOnCompleteListener(task -> {
                         waitingDialog.dismiss();
@@ -389,7 +389,7 @@ public class FoodDetailFragment extends Fragment implements TextWatcher {
         food_description.setText(new StringBuilder(foodModel.getDescription()));
         food_price.setText(new StringBuilder(foodModel.getPrice().toString()));
         if(foodModel.getRatingValue()!=null)
-            ratingBar.setRating(foodModel.getRatingValue().floatValue());
+            ratingBar.setRating(foodModel.getRatingValue().floatValue() / foodModel.getRatingCount());
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(Common.selectedFood.getName());
 
         for(SizeModel sizeModel:Common.selectedFood.getSize())
@@ -424,8 +424,8 @@ public class FoodDetailFragment extends Fragment implements TextWatcher {
             for (AddonModel addonModel:Common.selectedFood.getUserSelectedAddon())
                 totalPrice+=Double.parseDouble(addonModel.getPrice().toString());
 
-
-        totalPrice+=Double.parseDouble(Common.selectedFood.getUserSelectedSize().getPrice().toString());
+        if(Common.selectedFood.getUserSelectedSize() != null)
+            totalPrice+=Double.parseDouble(Common.selectedFood.getUserSelectedSize().getPrice().toString());
         displayPrice=totalPrice*(Integer.parseInt(numberButton.getNumber()));
         displayPrice=Math.round(displayPrice*100.0/100.0);
         food_price.setText(new StringBuilder("").append(Common.formatPrice(displayPrice)).toString());
