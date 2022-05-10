@@ -426,6 +426,8 @@ public class FoodDetailFragment extends Fragment implements TextWatcher {
 
         if(Common.selectedFood.getUserSelectedSize() != null)
             totalPrice+=Double.parseDouble(Common.selectedFood.getUserSelectedSize().getPrice().toString());
+
+
         displayPrice=totalPrice*(Integer.parseInt(numberButton.getNumber()));
         displayPrice=Math.round(displayPrice*100.0/100.0);
         food_price.setText(new StringBuilder("").append(Common.formatPrice(displayPrice)).toString());
