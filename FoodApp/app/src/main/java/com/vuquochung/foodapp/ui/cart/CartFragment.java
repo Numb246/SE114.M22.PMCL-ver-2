@@ -317,6 +317,26 @@ public class CartFragment extends Fragment implements ILoadTimeFromFirebaseListe
                                 }
                             });
                 });
+        cartDataSource.cleanCart(Common.currentUser.getUid())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Integer integer) {
+                        //Toast.makeText(getContext(), "Clear Cart Success", Toast.LENGTH_SHORT).show();
+                        EventBus.getDefault().postSticky(new CounterCartEvent(true));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(getContext(),   ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private String getAddressFromLatLng(double latitude, double longitude) {
@@ -618,6 +638,7 @@ public class CartFragment extends Fragment implements ILoadTimeFromFirebaseListe
     @Override
     public void onLoadTimeSuccess(Order order, long estimateTimeInMs) {
         order.setCreateDate(estimateTimeInMs);
+        order.setOrderStatus(0);
         writeOrderToFirebase(order);
        // syncLocalTimeWithGlobalTime(order);
     }

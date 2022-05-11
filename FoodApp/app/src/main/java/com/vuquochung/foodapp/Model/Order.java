@@ -10,6 +10,8 @@ public class Order {
     private boolean cod;
     private int discount;
     private long createDate;
+    private String orderNumber;
+    private int orderStatus;
 
     private List<CartItem> cartItemList;
 
@@ -126,5 +128,21 @@ public class Order {
 
     public void setCreateDate(long createDate) {
         this.createDate = createDate;
+    }
+
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    public int getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(int orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }
