@@ -45,9 +45,14 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.vuquochung.foodapp.Adapter.MyCartAdapter;
 import com.vuquochung.foodapp.Adapter.MyFoodListAdapter;
+import com.vuquochung.foodapp.Callback.ILoadTimeFromFirebaseListener;
 import com.vuquochung.foodapp.Common.Common;
 import com.vuquochung.foodapp.Common.MySwipeHelper;
 import com.vuquochung.foodapp.Database.CartDataSource;
@@ -67,6 +72,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -84,13 +91,14 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class CartFragment extends Fragment {
+public class CartFragment extends Fragment implements ILoadTimeFromFirebaseListener {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private Parcelable recyclerViewState;
     private CartDataSource cartDataSource;
     private CartViewModel cartViewModel;
 
+    ILoadTimeFromFirebaseListener listener;
     //LocationRequest locationRequest;
     com.google.android.gms.location.LocationRequest locationRequest;
     LocationCallback locationCallback;
@@ -245,7 +253,7 @@ public class CartFragment extends Fragment {
                             order.setTransactionId("Cash On Delivery");
 
                             //Submit this order to FireBase
-                            writeOrderToFirebase(order);
+                            syncLocalTimeWithGlobalTime(order);
                         }
 
 
@@ -258,6 +266,26 @@ public class CartFragment extends Fragment {
         }, throwable -> {
             Toast.makeText(getContext(), ""+throwable.getMessage(), Toast.LENGTH_SHORT).show();
         }));
+    }
+
+    private void syncLocalTimeWithGlobalTime(Order order) {
+        final DatabaseReference offsetRef = FirebaseDatabase.getInstance().getReference(".info/serverTimeOffset");
+        offsetRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                long offset = snapshot.getValue(Long.class);
+                long estimatedServerTimeMs = System.currentTimeMillis() +offset;
+                SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");
+                Date resultDate = new Date(estimatedServerTimeMs);
+                Log.d("TEST_DATE",""+sdf.format(resultDate));
+                listener.onLoadTimeSuccess(order,estimatedServerTimeMs);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                listener.onLoadTimeFailed(error.getMessage());
+            }
+        });
     }
 
     private void writeOrderToFirebase(Order order) {
@@ -318,7 +346,7 @@ public class CartFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         cartViewModel =
                 new ViewModelProvider(this).get(CartViewModel.class);
-
+        listener = this;
         //binding = FragmentSlideshowBinding.inflate(inflater, container, false);
         //View root = binding.getRoot();
         View root = inflater.inflate(R.layout.fragment_cart, container, false);
@@ -585,5 +613,17 @@ public class CartFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    @Override
+    public void onLoadTimeSuccess(Order order, long estimateTimeInMs) {
+        order.setCreateDate(estimateTimeInMs);
+        writeOrderToFirebase(order);
+       // syncLocalTimeWithGlobalTime(order);
+    }
+
+    @Override
+    public void onLoadTimeFailed(String message) {
+        Toast.makeText(getContext(), ""+message, Toast.LENGTH_SHORT).show();
     }
 }
