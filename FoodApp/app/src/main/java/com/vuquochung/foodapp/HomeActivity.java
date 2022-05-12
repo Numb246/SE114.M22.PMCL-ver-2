@@ -37,6 +37,7 @@ import com.vuquochung.foodapp.EventBus.CategoryClick;
 import com.vuquochung.foodapp.EventBus.CounterCartEvent;
 import com.vuquochung.foodapp.EventBus.FoodItemClick;
 import com.vuquochung.foodapp.EventBus.HideFABCart;
+import com.vuquochung.foodapp.EventBus.MenuItemBack;
 import com.vuquochung.foodapp.EventBus.PopularCategoryClick;
 import com.vuquochung.foodapp.Model.CategoryModel;
 import com.vuquochung.foodapp.Model.FoodModel;
@@ -63,6 +64,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private CartDataSource cartDataSource;
 
     android.app.AlertDialog dialog;
+
+    int menuClickId = -1;
 
     @BindView(R.id.fab)
     CounterFab fab;
@@ -134,22 +137,26 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawers();
         switch (item.getItemId()){
             case R.id.nav_home:
-                navController.navigate(R.id.nav_home);
+                if(item.getItemId() != menuClickId)
+                    navController.navigate(R.id.nav_home);
                 break;
             case R.id.nav_menu:
-                navController.navigate(R.id.nav_menu);
+                if(item.getItemId() != menuClickId)
+                    navController.navigate(R.id.nav_menu);
                 break;
             case R.id.nav_sign_out:
                 signOut();
                 break;
             case R.id.nav_cart:
-                navController.navigate(R.id.nav_cart);
+                if(item.getItemId() != menuClickId)
+                    navController.navigate(R.id.nav_cart);
                 break;
             case R.id.nav_view_orders:
-                navController.navigate(R.id.nav_view_orders);
+                if(item.getItemId() != menuClickId)
+                    navController.navigate(R.id.nav_view_orders);
                 break;
-
         }
+        menuClickId = item.getItemId();
         return true;
     }
 
@@ -367,5 +374,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                     }
                 });
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void countCardAgain(CounterCartEvent event){
+        if(event.isSuccess())
+            countCartItem();
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onMenuItemBack(MenuItemBack event){
+        menuClickId = -1;
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+            getSupportFragmentManager().popBackStack();
+        }
     }
 }

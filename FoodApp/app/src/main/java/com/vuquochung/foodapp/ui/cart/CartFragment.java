@@ -61,6 +61,7 @@ import com.vuquochung.foodapp.Database.CartItem;
 import com.vuquochung.foodapp.Database.LocalCartDataSource;
 import com.vuquochung.foodapp.EventBus.CounterCartEvent;
 import com.vuquochung.foodapp.EventBus.HideFABCart;
+import com.vuquochung.foodapp.EventBus.MenuItemBack;
 import com.vuquochung.foodapp.EventBus.UpdateItemInCart;
 import com.vuquochung.foodapp.Model.FoodModel;
 import com.vuquochung.foodapp.Model.Order;
@@ -646,5 +647,11 @@ public class CartFragment extends Fragment implements ILoadTimeFromFirebaseListe
     @Override
     public void onLoadTimeFailed(String message) {
         Toast.makeText(getContext(), ""+message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().postSticky(new MenuItemBack());
+        super.onDestroy();
     }
 }

@@ -20,8 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.vuquochung.foodapp.Adapter.MyCategoriesAdapter;
 import com.vuquochung.foodapp.Common.Common;
 import com.vuquochung.foodapp.Common.SpacesItemDecoraion;
+import com.vuquochung.foodapp.EventBus.MenuItemBack;
 import com.vuquochung.foodapp.R;
 import com.vuquochung.foodapp.databinding.FragmentMenuBinding;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -86,5 +89,11 @@ public class MenuFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().postSticky(new MenuItemBack());
+        super.onDestroy();
     }
 }
