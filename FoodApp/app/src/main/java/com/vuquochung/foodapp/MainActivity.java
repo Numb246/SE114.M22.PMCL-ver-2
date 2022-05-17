@@ -23,6 +23,8 @@ import android.content.DialogInterface;
         import android.widget.EditText;
         import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -238,8 +240,22 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void goToHomeActivity(UserModel userModel) {
-        Common.currentUser = userModel;
-        startActivity(new Intent(MainActivity.this,HomeActivity.class));
-        finish();
+        FirebaseMessaging.getInstance().getToken().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                Common.currentUser = userModel;
+                startActivity(new Intent(MainActivity.this,HomeActivity.class));
+                finish();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                Common.currentUser = userModel;
+                Common.updateToken(MainActivity.this,task.getResult());
+                startActivity(new Intent(MainActivity.this,HomeActivity.class));
+                finish();
+            }
+        });
     }
 }
