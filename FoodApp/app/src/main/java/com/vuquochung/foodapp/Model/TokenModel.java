@@ -3,6 +3,9 @@ package com.vuquochung.foodapp.Model;
 public class TokenModel {
     private String phone,token;
 
+    public TokenModel() {
+    }
+
     public TokenModel(String phone, String token) {
         this.phone = phone;
         this.token = token;

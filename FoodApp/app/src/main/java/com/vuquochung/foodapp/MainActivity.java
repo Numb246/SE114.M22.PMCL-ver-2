@@ -24,9 +24,7 @@ import android.content.DialogInterface;
         import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
-import com.google.firebase.installations.FirebaseInstallations;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -65,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private DatabaseReference userRef;
-    private List<AuthUI.IdpConfig> providers;
+    private List<AuthUI.IdpConfig>providers;
 
     @Override
     protected void onStart() {
@@ -90,10 +88,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void Init() {
-        providers = Arrays.asList(new AuthUI.IdpConfig.PhoneBuilder().build());
+        providers= Arrays.asList(new AuthUI.IdpConfig.PhoneBuilder().build());
 
 
-        userRef = FirebaseDatabase.getInstance().getReference(Common.USER_REFERENCES);
+        userRef= FirebaseDatabase.getInstance().getReference(Common.USER_REFERENCES);
         firebaseAuth = FirebaseAuth.getInstance();
         dialog = new SpotsDialog.Builder().setCancelable(false).setContext(this).build();
 
@@ -135,10 +133,11 @@ public class MainActivity extends AppCompatActivity {
         userRef.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    UserModel userModel = dataSnapshot.getValue(UserModel.class);
-                    goToHomeActivity(userModel); //thiếu 1 string
-                } else {
+                if (dataSnapshot.exists()){
+                    UserModel userModel= dataSnapshot.getValue(UserModel.class);
+                    goToHomeActivity(userModel);
+                }
+                else{
                     showRegisterDialog(user);
                 }
                 dialog.dismiss();
@@ -147,20 +146,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 dialog.dismiss();
-                Toast.makeText(MainActivity.this, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, ""+ databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void showRegisterDialog(FirebaseUser user) {
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+    private void showRegisterDialog(FirebaseUser user)
+    {
+        androidx.appcompat.app.AlertDialog.Builder builder= new androidx.appcompat.app.AlertDialog.Builder(this);
         builder.setTitle("Register");
         builder.setMessage("Please Fill Information");
 
-        View itemView = LayoutInflater.from(this).inflate(R.layout.layout_register, null);
-        EditText edt_name = (EditText) itemView.findViewById(R.id.edt_name);
-        EditText edt_adress = (EditText) itemView.findViewById(R.id.edt_address);
-        EditText edt_phone = (EditText) itemView.findViewById(R.id.edt_phone);
+        View itemView= LayoutInflater.from(this).inflate(R.layout.layout_register, null);
+        EditText edt_name= (EditText)itemView.findViewById(R.id.edt_name);
+        EditText edt_adress= (EditText)itemView.findViewById(R.id.edt_address);
+        EditText edt_phone= (EditText)itemView.findViewById(R.id.edt_phone);
 
         //set data
         edt_phone.setText(user.getPhoneNumber());
@@ -171,15 +171,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
         builder.setPositiveButton("REGISTER", (dialogInterface, which) -> {
-            if (TextUtils.isEmpty(edt_name.getText().toString())) {
+            if(TextUtils.isEmpty(edt_name.getText().toString()))
+            {
                 Toast.makeText(this, "Please enter Name", Toast.LENGTH_SHORT).show();
                 return;
-            } else if (TextUtils.isEmpty(edt_adress.getText().toString())) {
+            }
+            else  if(TextUtils.isEmpty(edt_adress.getText().toString()))
+            {
                 Toast.makeText(this, "Please enter Address", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            UserModel userModel = new UserModel();
+            UserModel userModel= new UserModel();
             userModel.setUid(user.getUid());
             userModel.setName(edt_name.getText().toString());
             userModel.setAddress(edt_adress.getText().toString());
@@ -190,11 +193,12 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
 
-                            if (task.isSuccessful()) {
+                            if(task.isSuccessful())
+                            {
                                 dialogInterface.dismiss();
 
                                 Toast.makeText(MainActivity.this, "Successfully Registered", Toast.LENGTH_SHORT).show();
-                                goToHomeActivity(userModel); //thiếu 1 string
+                                goToHomeActivity(userModel);
                             }
 
                         }
@@ -211,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
-                .build(), APP_REQUEST_CODE);
+                .build(),APP_REQUEST_CODE);
 
     }
 
@@ -219,31 +223,37 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == APP_REQUEST_CODE) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-            if (resultCode == RESULT_OK) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            } else {
+            IdpResponse response= IdpResponse.fromResultIntent(data);
+            if(resultCode== RESULT_OK)
+            {
+                FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
+            }
+            else
+            {
                 Toast.makeText(this, "SignIn Failied", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
 
-    private void goToHomeActivity(UserModel userModel, String token) {
 
-        FirebaseInstallations.getInstance().getId().addOnFailureListener(e -> {
-            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
 
-            Common.currentUser = userModel;
-            Common.currentToken = token;
-            startActivity(new Intent(MainActivity.this, HomeActivity.class));
-            finish();
+
+    private void goToHomeActivity(UserModel userModel) {
+        FirebaseMessaging.getInstance().getToken().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                Common.currentUser = userModel;
+                startActivity(new Intent(MainActivity.this,HomeActivity.class));
+                finish();
+            }
         }).addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
                 Common.currentUser = userModel;
-                Common.currentToken = token;
-                startActivity(new Intent(MainActivity.this, HomeActivity.class));
+                Common.updateToken(MainActivity.this,task.getResult());
+                startActivity(new Intent(MainActivity.this,HomeActivity.class));
                 finish();
             }
         });
