@@ -22,4 +22,6 @@
     <string name="action_clear_cart">Clear Cart</string>
     <string name="menu_view_orders">View Orders</string>
     <string name="action_search">Search</string>
+    <string name="google_maps_api" translatable="false" templateMergeStrategy="preserve">AIzaSyCbF3qHvrd3UOg_V4StDml5aetg4PB1vV4</string>
+    <string name="update_info">Update Info</string>
 </resources>

@@ -3,24 +3,22 @@ package com.vuquochung.foodapp.ui.view_orders;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.vuquochung.foodapp.Model.CommentModel;
-import com.vuquochung.foodapp.Model.FoodModel;
-import com.vuquochung.foodapp.Model.Order;
+import com.vuquochung.foodapp.Model.OrderModel;
 
 import java.util.List;
 
 public class ViewOrdersViewModel extends ViewModel {
-    private MutableLiveData<List<Order>> mutableLiveDataOrderList;
+    private MutableLiveData<List<OrderModel>> mutableLiveDataOrderList;
     public ViewOrdersViewModel()
     {
         mutableLiveDataOrderList=new MutableLiveData<>();
     }
 
-    public MutableLiveData<List<Order>> getMutableLiveDataOrderList() {
+    public MutableLiveData<List<OrderModel>> getMutableLiveDataOrderList() {
         return mutableLiveDataOrderList;
     }
 
-    public void setMutableLiveDataOrderList(List<Order> orderList) {
-        mutableLiveDataOrderList.setValue(orderList);
+    public void setMutableLiveDataOrderList(List<OrderModel> orderModelList) {
+        mutableLiveDataOrderList.setValue(orderModelList);
     }
 }
