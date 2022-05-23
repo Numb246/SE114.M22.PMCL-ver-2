@@ -80,4 +80,8 @@ dependencies {
 
     implementation 'com.karumi:dexter:5.0.0'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
+
+    implementation 'com.google.android.libraries.places:places:2.6.0'
+
+
 }

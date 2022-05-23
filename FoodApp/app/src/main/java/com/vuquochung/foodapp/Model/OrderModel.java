@@ -4,7 +4,7 @@ import com.vuquochung.foodapp.Database.CartItem;
 
 import java.util.List;
 
-public class Order {
+public class OrderModel {
     private String useId, userName, userPhone, shippingAddress, comment, transactionId;
     private double lat, lng, totalPayment, finalPayment;
     private boolean cod;
@@ -15,7 +15,7 @@ public class Order {
 
     private List<CartItem> cartItemList;
 
-    public Order() {
+    public OrderModel() {
     }
 
     public String getUseId() {
