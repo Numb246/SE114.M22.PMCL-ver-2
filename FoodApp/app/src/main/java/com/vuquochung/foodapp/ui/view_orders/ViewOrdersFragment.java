@@ -2,6 +2,7 @@ package com.vuquochung.foodapp.ui.view_orders;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,7 +34,9 @@ import com.vuquochung.foodapp.Database.CartItem;
 import com.vuquochung.foodapp.Database.LocalCartDataSource;
 import com.vuquochung.foodapp.EventBus.CounterCartEvent;
 import com.vuquochung.foodapp.Model.OrderModel;
+import com.vuquochung.foodapp.Model.ShippingOrderModel;
 import com.vuquochung.foodapp.R;
+import com.vuquochung.foodapp.TrackingOrderActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -157,6 +160,42 @@ public class ViewOrdersFragment extends Fragment implements ILoadOrderCallbackLi
                       .append(Common.convertStatusToText(orderModel.getOrderStatus()))
                               .append(", so you can't cancel it!"),Toast.LENGTH_SHORT).show();
                   }
+                }));
+                buf.add(new MyButton(getContext(), "Tracking Order", 30, 0, Color.parseColor("#001970"), pos -> {
+                    OrderModel orderModel=((MyOrdersAdapter)recycler_orders.getAdapter()).getItemAtPosition(pos);
+                    Toast.makeText(getContext(),orderModel.getOrderNumber(),Toast.LENGTH_SHORT).show();
+                    Log.d("OderNumber",orderModel.getOrderNumber());
+                    FirebaseDatabase.getInstance()
+                            .getReference(Common.SHIPPING_ORDER_REF)
+                            .child(orderModel.getOrderNumber())
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Log.d("DATA",snapshot.toString());
+                                    if(snapshot.exists())
+                                    {
+                                        Common.currentShippingOrder=snapshot.getValue(ShippingOrderModel.class);
+                                        Common.currentShippingOrder.setKey(snapshot.getKey());
+                                        if(Common.currentShippingOrder.getCurrentLat()!=-1 && Common.currentShippingOrder.getCurrentLng()!=-1)
+                                        {
+                                            startActivity(new Intent(getContext(), TrackingOrderActivity.class));
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(getContext(),"Shipper not start ship your order, just wait",Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(getContext(),"Your order just placed, must be wait it shipping",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Toast.makeText(getContext(),""+error.getMessage(),Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 }));
                 buf.add(new MyButton(getContext(), "Repeat Order", 30, 0, Color.parseColor("#5d4037"), pos -> {
                     OrderModel orderModel=((MyOrdersAdapter)recycler_orders.getAdapter()).getItemAtPosition(pos);
