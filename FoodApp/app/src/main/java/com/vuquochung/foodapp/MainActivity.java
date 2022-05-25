@@ -13,16 +13,26 @@ import android.content.DialogInterface;
         import androidx.annotation.NonNull;
         import androidx.annotation.Nullable;
         import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
-        import android.app.AlertDialog;
+import android.app.AlertDialog;
         import android.content.Intent;
         import android.os.Bundle;
         import android.text.TextUtils;
         import android.view.LayoutInflater;
         import android.view.View;
         import android.widget.EditText;
-        import android.widget.Toast;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -63,6 +73,14 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference userRef;
     private List<AuthUI.IdpConfig>providers;
 
+    private Place placeSelected;
+    private AutocompleteSupportFragment places_fragment;
+    private PlacesClient placesClient;
+    private List<Place.Field> placeFields=Arrays.asList(Place.Field.ID,
+            Place.Field.NAME,
+            Place.Field.ADDRESS,
+            Place.Field.LAT_LNG);
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -86,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void Init() {
+        Places.initialize(this,getString(R.string.google_maps_api));
+        placesClient=Places.createClient(this);
         providers= Arrays.asList(new AuthUI.IdpConfig.PhoneBuilder().build());
 
 
@@ -156,9 +176,25 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage("Please Fill Information");
 
         View itemView= LayoutInflater.from(this).inflate(R.layout.layout_register, null);
+
         EditText edt_name= (EditText)itemView.findViewById(R.id.edt_name);
-        EditText edt_adress= (EditText)itemView.findViewById(R.id.edt_address);
+        TextView txt_address_detail= (TextView) itemView.findViewById(R.id.txt_address_detail);
         EditText edt_phone= (EditText)itemView.findViewById(R.id.edt_phone);
+        places_fragment=(AutocompleteSupportFragment)getSupportFragmentManager()
+        .findFragmentById(R.id.places_autocomplete_fragment);
+        places_fragment.setPlaceFields(placeFields);
+        places_fragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onError(@NonNull Status status) {
+                Toast.makeText(MainActivity.this,""+status.getStatusMessage(),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                placeSelected=place;
+                txt_address_detail.setText(place.getAddress());
+            }
+        });
 
         //set data
         edt_phone.setText(user.getPhoneNumber());
@@ -169,43 +205,48 @@ public class MainActivity extends AppCompatActivity {
         });
 
         builder.setPositiveButton("REGISTER", (dialogInterface, which) -> {
-            if(TextUtils.isEmpty(edt_name.getText().toString()))
-            {
-                Toast.makeText(this, "Please enter Name", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            else  if(TextUtils.isEmpty(edt_adress.getText().toString()))
-            {
-                Toast.makeText(this, "Please enter Address", Toast.LENGTH_SHORT).show();
-                return;
-            }
+            if(placeSelected!=null) {
+                if (TextUtils.isEmpty(edt_name.getText().toString())) {
+                    Toast.makeText(MainActivity.this, "Please enter Name", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-            UserModel userModel= new UserModel();
-            userModel.setUid(user.getUid());
-            userModel.setName(edt_name.getText().toString());
-            userModel.setAddress(edt_adress.getText().toString());
-            userModel.setPhone(edt_phone.getText().toString());
+                UserModel userModel = new UserModel();
+                userModel.setUid(user.getUid());
+                userModel.setName(edt_name.getText().toString());
+                userModel.setAddress(txt_address_detail.getText().toString());
+                userModel.setPhone(edt_phone.getText().toString());
+                userModel.setLat(placeSelected.getLatLng().latitude);
+                userModel.setLng(placeSelected.getLatLng().longitude);
+                userRef.child(user.getUid()).setValue(userModel)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
 
-            userRef.child(user.getUid()).setValue(userModel)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    dialogInterface.dismiss();
 
-                            if(task.isSuccessful())
-                            {
-                                dialogInterface.dismiss();
+                                    Toast.makeText(MainActivity.this, "Successfully Registered", Toast.LENGTH_SHORT).show();
+                                    goToHomeActivity(userModel);
+                                }
 
-                                Toast.makeText(MainActivity.this, "Successfully Registered", Toast.LENGTH_SHORT).show();
-                                goToHomeActivity(userModel);
                             }
-
-                        }
-                    });
-
+                        });
+            }
+            else
+            {
+                Toast.makeText(this,"Please select address",Toast.LENGTH_SHORT).show();
+            }
         });
 
         builder.setView(itemView);
-        builder.show();
+        androidx.appcompat.app.AlertDialog dialog=builder.create();
+        dialog.setOnDismissListener(dialogInterface -> {
+            FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.remove(places_fragment);
+            fragmentTransaction.commit();
+        });
+        dialog.show();
     }
 
     private void phoneLogIn() {
@@ -228,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else
             {
-                Toast.makeText(this, "SignIn Failied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "SignIn Failed", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -238,8 +279,22 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void goToHomeActivity(UserModel userModel) {
-        Common.currentUser = userModel;
-        startActivity(new Intent(MainActivity.this,HomeActivity.class));
-        finish();
+        FirebaseMessaging.getInstance().getToken().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                Common.currentUser = userModel;
+                startActivity(new Intent(MainActivity.this,HomeActivity.class));
+                finish();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                Common.currentUser = userModel;
+                Common.updateToken(MainActivity.this,task.getResult());
+                startActivity(new Intent(MainActivity.this,HomeActivity.class));
+                finish();
+            }
+        });
     }
 }

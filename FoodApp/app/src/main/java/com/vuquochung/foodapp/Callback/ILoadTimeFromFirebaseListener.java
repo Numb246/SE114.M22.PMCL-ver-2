@@ -1,8 +1,8 @@
 package com.vuquochung.foodapp.Callback;
 
-import com.vuquochung.foodapp.Model.Order;
+import com.vuquochung.foodapp.Model.OrderModel;
 
 public interface ILoadTimeFromFirebaseListener {
-    void onLoadTimeSuccess(Order order, long estimateTimeInMs);
+    void onLoadTimeSuccess(OrderModel orderModel, long estimateTimeInMs);
     void onLoadTimeFailed(String message);
 }

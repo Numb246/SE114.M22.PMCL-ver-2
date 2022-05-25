@@ -43,6 +43,7 @@ import com.vuquochung.foodapp.Database.CartDatabase;
 import com.vuquochung.foodapp.Database.CartItem;
 import com.vuquochung.foodapp.Database.LocalCartDataSource;
 import com.vuquochung.foodapp.EventBus.CounterCartEvent;
+import com.vuquochung.foodapp.EventBus.MenuItemBack;
 import com.vuquochung.foodapp.Model.AddonModel;
 import com.vuquochung.foodapp.Model.CommentModel;
 import com.vuquochung.foodapp.Model.FoodModel;
@@ -477,5 +478,11 @@ public class FoodDetailFragment extends Fragment implements TextWatcher {
     public void onStop() {
         compositeDisposable.clear();
         super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().postSticky(new MenuItemBack());
+        super.onDestroy();
     }
 }
