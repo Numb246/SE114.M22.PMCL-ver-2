@@ -709,6 +709,7 @@ public class CartFragment extends Fragment implements ILoadTimeFromFirebaseListe
             }
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
         }
+
     }
 
     @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
@@ -883,16 +884,35 @@ public class CartFragment extends Fragment implements ILoadTimeFromFirebaseListe
 
                             cartItem.setFoodExtraPrice(Common.calculateExtraPrice(Common.selectedFood.getUserSelectedSize(),
                                     Common.selectedFood.getUserSelectedAddon()));
-
+                            Log.d("DATACART",cartItem.getFoodName()+"-"+cartItem.getFoodSize());
                             //Insert new
                             compositeDisposable.add(cartDataSource.insertOrReplaceAll(cartItem)
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(()->{
+                                        Toast.makeText(getContext(),cartItem.getFoodName(),Toast.LENGTH_SHORT).show();
                                         EventBus.getDefault().postSticky(new CounterCartEvent(true));
                                         calculateTotalPrice();
                                         dialog.dismiss();
                                         Toast.makeText(getContext(), "Update cart success", Toast.LENGTH_SHORT).show();
+                                        cartViewModel.initCartDataSource(getContext());
+                                        cartViewModel.getMutableLiveDataCartItems().observe(getViewLifecycleOwner(), new Observer<List<CartItem>>() {
+                                            @Override
+                                            public void onChanged(List<CartItem> cartItems) {
+                                                if (cartItems == null || cartItems.isEmpty()) {
+                                                    recycler_cart.setVisibility(View.GONE);
+                                                    group_place_holder.setVisibility(View.GONE);
+                                                    txt_empty_cart.setVisibility(View.VISIBLE);
+                                                } else {
+                                                    recycler_cart.setVisibility(View.VISIBLE);
+                                                    group_place_holder.setVisibility(View.VISIBLE);
+                                                    txt_empty_cart.setVisibility(View.GONE);
+
+                                                    adapter = new MyCartAdapter(getContext(), cartItems);
+                                                    recycler_cart.setAdapter(adapter);
+                                                }
+                                            }
+                                        });
                                     },throwable -> {
                                         Toast.makeText(getContext(), ""+throwable.getMessage(), Toast.LENGTH_SHORT).show();
                                     })
@@ -918,7 +938,6 @@ public class CartFragment extends Fragment implements ILoadTimeFromFirebaseListe
                     cartItem.getFoodAddon(),new TypeToken<List<AddonModel>>(){}.getType());
             Common.selectedFood.setUserSelectedAddon(addonModels);
             chip_group_user_selected_addon.removeAllViews();
-
             //add all view
             for (AddonModel addonModel:addonModels)
             {
