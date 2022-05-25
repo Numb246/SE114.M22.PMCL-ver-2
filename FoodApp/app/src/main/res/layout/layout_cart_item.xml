@@ -10,6 +10,7 @@
         android:padding="16dp"
         android:orientation="horizontal">
         <ImageView
+            android:layout_gravity="center_vertical"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:id="@+id/img_cart"
@@ -32,6 +33,29 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:textSize="14sp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_food_size"
+                    android:text="Size"
+                    android:fontFamily="@font/brandon_medium"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_food_addon"
+                    android:text="Addon"
+                    android:fontFamily="@font/brandon_medium"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:textSize="14sp"/>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
