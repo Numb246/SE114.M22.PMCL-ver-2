@@ -43,13 +43,14 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         unbinder= ButterKnife.bind(this,root);
+        String key=getArguments().getString("restaurant");
         init();
-        homeViewModel.getPopularList().observe(getViewLifecycleOwner(),popularCategoryModels -> {
+        homeViewModel.getPopularList(key).observe(getViewLifecycleOwner(),popularCategoryModels -> {
             MyPopularCategoriesAdapter adapter=new MyPopularCategoriesAdapter(getContext(),popularCategoryModels);
             recycler_popular.setAdapter(adapter);
             recycler_popular.setLayoutAnimation(layoutAnimationController);
         });
-        homeViewModel.getBestDealList().observe(getViewLifecycleOwner(),bestDealModels -> {
+        homeViewModel.getBestDealList(key).observe(getViewLifecycleOwner(),bestDealModels -> {
             MyBestDealsAdapter adapter=new MyBestDealsAdapter(getContext(),bestDealModels,true);
             viewPager.setAdapter(adapter);
         });

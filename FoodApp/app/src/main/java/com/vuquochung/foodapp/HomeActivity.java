@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.vuquochung.foodapp.Common.Common;
 import com.vuquochung.foodapp.Database.CartDataSource;
 import com.vuquochung.foodapp.Database.CartDatabase;
@@ -52,6 +54,7 @@ import com.vuquochung.foodapp.EventBus.CounterCartEvent;
 import com.vuquochung.foodapp.EventBus.FoodItemClick;
 import com.vuquochung.foodapp.EventBus.HideFABCart;
 import com.vuquochung.foodapp.EventBus.MenuItemBack;
+import com.vuquochung.foodapp.EventBus.MenuItemEvent;
 import com.vuquochung.foodapp.EventBus.PopularCategoryClick;
 import com.vuquochung.foodapp.Model.CategoryModel;
 import com.vuquochung.foodapp.Model.FoodModel;
@@ -70,6 +73,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dmax.dialog.SpotsDialog;
+import io.paperdb.Paper;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -89,6 +93,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawer;
     private NavController navController;
     private CartDataSource cartDataSource;
+    private NavigationView navigationView;
 
     android.app.AlertDialog dialog;
 
@@ -116,17 +121,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
         cartDataSource=new LocalCartDataSource(CartDatabase.getInstance(this).cartDAO());
         setSupportActionBar(binding.appBarHome.toolbar);
-        binding.appBarHome.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navController.navigate(R.id.nav_cart);
-            }
-        });
+        binding.appBarHome.fab.setOnClickListener(view -> navController.navigate(R.id.nav_cart));
         drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView;
+        navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_restaurant,
                 R.id.nav_home, R.id.nav_menu, R.id.nav_food_detail,R.id.nav_foodlist,R.id.nav_cart,R.id.nav_view_orders)
                 .setOpenableLayout(drawer)
                 .build();
@@ -169,6 +170,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         item.setChecked(true);
         drawer.closeDrawers();
         switch (item.getItemId()){
+            case R.id.nav_restaurant:
+                if(item.getItemId()!=menuClickId)
+                    navController.navigate(R.id.nav_restaurant);
+                break;
             case R.id.nav_home:
                 if(item.getItemId()!=menuClickId)
                     navController.navigate(R.id.nav_home);
@@ -188,6 +193,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 if(item.getItemId()!=menuClickId)
                     navController.navigate(R.id.nav_view_orders);
                 break;
+            case R.id.nav_news:
+                showSubscribeNews();
+                break;
             case R.id.nav_update_info:
                 showUpdateInfoDialog();
                 break;
@@ -195,6 +203,44 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         menuClickId=item.getItemId();
         return true;
+    }
+
+    private void showSubscribeNews() {
+        Paper.init(this);
+        androidx.appcompat.app.AlertDialog.Builder builder= new androidx.appcompat.app.AlertDialog.Builder(this);
+        builder.setTitle("Update Info");
+        builder.setMessage("Do you want to subscribe news from our restaurant");
+
+        View itemView= LayoutInflater.from(this).inflate(R.layout.layout_subcribe_news, null);
+        CheckBox ckb_news=(CheckBox) itemView.findViewById(R.id.ckb_subscribe_news);
+        boolean isSubscribeNews= Paper.book().read(Common.IS_SUBSCRIBE_NEWS,false);
+        if(isSubscribeNews)
+            ckb_news.setChecked(true);
+        builder.setNegativeButton("CANCEL", (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+        });
+        builder.setPositiveButton("SEND", (dialogInterface, i) -> {
+            if(ckb_news.isChecked())
+            {
+                Paper.book().write(Common.IS_SUBSCRIBE_NEWS,true);
+                FirebaseMessaging.getInstance()
+                        .subscribeToTopic(Common.NEWS_TOPIC)
+                        .addOnFailureListener(e -> Toast.makeText(HomeActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show())
+                        .addOnSuccessListener(unused -> Toast.makeText(HomeActivity.this,"Subscribe successfully",Toast.LENGTH_SHORT).show());
+            }
+            else
+            {
+                Paper.book().delete(Common.IS_SUBSCRIBE_NEWS);
+                FirebaseMessaging.getInstance()
+                        .unsubscribeFromTopic(Common.NEWS_TOPIC)
+                        .addOnFailureListener(e -> Toast.makeText(HomeActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show())
+                        .addOnSuccessListener(unused -> Toast.makeText(HomeActivity.this,"Unsubscribe successfully",Toast.LENGTH_SHORT).show());
+            }
+        });
+        builder.setView(itemView);
+        AlertDialog dialog=builder.create();
+        dialog.show();
+
     }
 
     private void showUpdateInfoDialog() {
@@ -510,5 +556,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         menuClickId=-1;
         if(getSupportFragmentManager().getBackStackEntryCount()>0)
             getSupportFragmentManager().popBackStack();
+    }
+
+    @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
+    public void onRestaurantClick(MenuItemEvent event)
+    {
+        Bundle bundle=new Bundle();
+        bundle.putString("restaurant",event.getRestaurantModel().getUid());
+        navController.navigate(R.id.nav_home,bundle);
+        navigationView.getMenu().clear();
+        navigationView.inflateMenu(R.menu.restaurant_detail_menu);
     }
 }
