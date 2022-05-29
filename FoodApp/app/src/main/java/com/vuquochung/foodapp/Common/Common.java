@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -30,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.vuquochung.foodapp.Model.AddonModel;
 import com.vuquochung.foodapp.Model.CategoryModel;
 import com.vuquochung.foodapp.Model.FoodModel;
+import com.vuquochung.foodapp.Model.RestaurantModel;
 import com.vuquochung.foodapp.Model.ShippingOrderModel;
 import com.vuquochung.foodapp.Model.SizeModel;
 import com.vuquochung.foodapp.Model.TokenModel;
@@ -54,12 +56,18 @@ public class Common {
     public static final String ORDER_REF = "Order";
     public static final String NOTI_TITLE = "title";
     public static final String NOTI_CONTENT = "content";
+    public static final String IS_SUBSCRIBE_NEWS = "IS_SUBSCRIBE_NEWS";
+    public static final String NEWS_TOPIC = "news";
+    public static final String IS_SEND_IMAGE = "IS_SEND_IMAGE";
+    public static final String IMAGE_URL = "IMAGE_URL";
+    public static final String RESTAURANT_REF = "Restaurant";
     private static final String TOKEN_REF = "Tokens";
     public static final String SHIPPING_ORDER_REF = "ShippingOrder";
     public static UserModel currentUser;
     public static CategoryModel categorySelected;
     public static FoodModel selectedFood;
     public static ShippingOrderModel currentShippingOrder;
+    public static RestaurantModel currentRestaurant;
 
     public static String formatPrice(double price) {
         if(price!=0)
@@ -268,5 +276,38 @@ public class Common {
         }
         else
             return null;
+    }
+
+    public static void showNotificationBigStyle(Context context, int id, String title, String content, Bitmap bitmap, Intent intent) {
+        PendingIntent pendingIntent=null;
+        if(intent!=null)
+        {
+            pendingIntent=PendingIntent.getActivity(context,id,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+        String NOTIFICATION_CHANNEL_ID="emdt_dev_eat_it_v2";
+        NotificationManager notificationManager=(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
+        {
+            NotificationChannel notificationChannel=new NotificationChannel(NOTIFICATION_CHANNEL_ID,
+                    "Eat It V2",NotificationManager.IMPORTANCE_DEFAULT);
+            notificationChannel.setDescription("Eat It V2");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.setVibrationPattern(new long[]{0,1000,500,1000});
+            notificationChannel.enableVibration(true);
+
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+        NotificationCompat.Builder builder=new NotificationCompat.Builder(context,NOTIFICATION_CHANNEL_ID);
+        builder.setContentTitle(title)
+                .setContentText(content)
+                .setAutoCancel(true)
+                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setLargeIcon(bitmap)
+                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap));
+        if(pendingIntent!=null)
+            builder.setContentIntent(pendingIntent);
+        Notification notification=builder.build();
+        notificationManager.notify(id,notification);
     }
 }

@@ -32,6 +32,7 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -106,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
     private void Init() {
         Places.initialize(this,getString(R.string.google_maps_api));
         placesClient=Places.createClient(this);
-        providers= Arrays.asList(new AuthUI.IdpConfig.PhoneBuilder().build());
+        providers= Arrays.asList(new AuthUI.IdpConfig.PhoneBuilder().build(),
+                new AuthUI.IdpConfig.EmailBuilder().build());
 
 
         userRef= FirebaseDatabase.getInstance().getReference(Common.USER_REFERENCES);
@@ -178,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         View itemView= LayoutInflater.from(this).inflate(R.layout.layout_register, null);
 
         EditText edt_name= (EditText)itemView.findViewById(R.id.edt_name);
+        TextInputLayout phone_input_layout=(TextInputLayout)itemView.findViewById(R.id.phone_input_layout);
         TextView txt_address_detail= (TextView) itemView.findViewById(R.id.txt_address_detail);
         EditText edt_phone= (EditText)itemView.findViewById(R.id.edt_phone);
         places_fragment=(AutocompleteSupportFragment)getSupportFragmentManager()
@@ -197,7 +200,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //set data
-        edt_phone.setText(user.getPhoneNumber());
+        if(user.getPhoneNumber()==null || TextUtils.isEmpty(user.getPhoneNumber()))
+        {
+            phone_input_layout.setHint("Email");
+            edt_phone.setText(user.getEmail());
+            edt_name.setText(user.getDisplayName());
+        }
+        else
+        {
+            edt_phone.setText(user.getPhoneNumber());
+        }
 
 
         builder.setNegativeButton("CANCEL", (dialogInterface, which) -> {
@@ -236,6 +248,7 @@ public class MainActivity extends AppCompatActivity {
             else
             {
                 Toast.makeText(this,"Please select address",Toast.LENGTH_SHORT).show();
+                return;
             }
         });
 
@@ -253,6 +266,8 @@ public class MainActivity extends AppCompatActivity {
 
         startActivityForResult(AuthUI.getInstance()
                 .createSignInIntentBuilder()
+                .setLogo(R.drawable.logo)
+                .setTheme(R.style.LoginTheme)
                 .setAvailableProviders(providers)
                 .build(),APP_REQUEST_CODE);
 
