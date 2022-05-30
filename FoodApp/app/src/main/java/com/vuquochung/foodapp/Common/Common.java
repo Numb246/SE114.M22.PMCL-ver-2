@@ -37,7 +37,7 @@ import com.vuquochung.foodapp.Model.SizeModel;
 import com.vuquochung.foodapp.Model.TokenModel;
 import com.vuquochung.foodapp.Model.UserModel;
 import com.vuquochung.foodapp.R;
-import com.vuquochung.foodapp.Services.MyFCMServices;
+import com.vuquochung.foodapp.services.MyFCMServices;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
