@@ -7,8 +7,12 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 
-@Entity(tableName = "Cart",primaryKeys = {"uid","categoryId","foodId","foodAddon","foodSize"})
+@Entity(tableName = "Cart",primaryKeys = {"uid","categoryId","foodId","foodAddon","foodSize","restaurantId"})
 public class CartItem {
+
+    @NonNull
+    @ColumnInfo(name= "restaurantId")
+    private String restaurantId;
 
     @NonNull
     @ColumnInfo(name= "categoryId")
@@ -48,9 +52,11 @@ public class CartItem {
     @ColumnInfo(name ="uid")
     private String uid;
 
-    public String getFoodId() {
-        return foodId;
-    }
+    public String getRestaurantId() { return restaurantId; }
+
+    public void setRestaurantId(String restaurantId) { this.restaurantId = restaurantId; }
+
+    public String getFoodId() { return foodId; }
 
     public void setFoodId(String foodId) {
         this.foodId = foodId;

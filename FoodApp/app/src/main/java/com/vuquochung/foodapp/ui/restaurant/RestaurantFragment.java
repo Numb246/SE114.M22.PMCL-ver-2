@@ -18,7 +18,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.vuquochung.foodapp.Adapter.MyRestaurantAdapter;
+import com.vuquochung.foodapp.EventBus.CounterCartEvent;
+import com.vuquochung.foodapp.EventBus.HideFABCart;
+import com.vuquochung.foodapp.EventBus.MenuInflateEvent;
 import com.vuquochung.foodapp.R;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,6 +66,7 @@ public class RestaurantFragment extends Fragment {
     }
 
     private void initViews() {
+        EventBus.getDefault().postSticky(new HideFABCart(true));
         setHasOptionsMenu(true);
         dialog=new AlertDialog.Builder(getContext()).setCancelable(false)
                 .setMessage("Please wait...").create();
@@ -72,5 +78,10 @@ public class RestaurantFragment extends Fragment {
         recycler_restaurant.addItemDecoration(new DividerItemDecoration(getContext(),linearLayoutManager.getOrientation()));
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().postSticky(new CounterCartEvent(true));
+        EventBus.getDefault().postSticky(new MenuInflateEvent(false));
+    }
 }

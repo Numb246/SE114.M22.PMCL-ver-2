@@ -310,4 +310,12 @@ public class Common {
         Notification notification=builder.build();
         notificationManager.notify(id,notification);
     }
+
+    public static String createTopicNews() {
+        return new StringBuilder("/topics/")
+                .append(Common.currentRestaurant.getUid())
+                .append("_")
+                .append("news")
+                .toString();
+    }
 }
