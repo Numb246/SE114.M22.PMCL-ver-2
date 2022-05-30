@@ -37,7 +37,7 @@ import com.vuquochung.foodapp.Model.SizeModel;
 import com.vuquochung.foodapp.Model.TokenModel;
 import com.vuquochung.foodapp.Model.UserModel;
 import com.vuquochung.foodapp.R;
-import com.vuquochung.foodapp.services.MyFCMServices;
+import com.vuquochung.foodapp.Services.MyFCMServices;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -309,5 +309,13 @@ public class Common {
             builder.setContentIntent(pendingIntent);
         Notification notification=builder.build();
         notificationManager.notify(id,notification);
+    }
+
+    public static String createTopicNews() {
+        return new StringBuilder("/topics/")
+                .append(Common.currentRestaurant.getUid())
+                .append("_")
+                .append("news")
+                .toString();
     }
 }

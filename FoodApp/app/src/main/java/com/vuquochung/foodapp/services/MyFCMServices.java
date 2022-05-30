@@ -1,4 +1,4 @@
-package com.vuquochung.foodapp.services;
+package com.vuquochung.foodapp.Services;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
