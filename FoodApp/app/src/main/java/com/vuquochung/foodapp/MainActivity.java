@@ -35,10 +35,12 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.vuquochung.foodapp.Common.Common;
         import com.vuquochung.foodapp.Model.UserModel;
@@ -118,29 +120,35 @@ public class MainActivity extends AppCompatActivity {
         listener = firebaseAuth -> {
 
             Dexter.withActivity(this)
-                    .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                    .withListener(new PermissionListener() {
+                    .withPermissions(
+                            Arrays.asList(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.CAMERA)
+                    )
+                    .withListener(new MultiplePermissionsListener() {
                         @Override
-                        public void onPermissionGranted(PermissionGrantedResponse response) {
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                        public void onPermissionsChecked(MultiplePermissionsReport report) {
+                            if(report.areAllPermissionsGranted())
+                            {
+                                FirebaseUser user = firebaseAuth.getCurrentUser();
 
-                            if (user != null) {
-                                //Account is already logged in
-                                CheckUserFromFirebase(user);
-                                // Toast.makeText(MainActivity.this, "Already Logged In", Toast.LENGTH_SHORT).show();
-                            } else {
-                                phoneLogIn();
+                                if (user != null) {
+                                    //Account is already logged in
+                                    CheckUserFromFirebase(user);
+                                    // Toast.makeText(MainActivity.this, "Already Logged In", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    phoneLogIn();
 
+                                }
                             }
+                            else
+                                Toast.makeText(MainActivity.this,"You must accept all permissions", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
-                        public void onPermissionDenied(PermissionDeniedResponse response) {
-                            Toast.makeText(MainActivity.this, "You must enable this permission to use app", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
                         }
                     }).check();

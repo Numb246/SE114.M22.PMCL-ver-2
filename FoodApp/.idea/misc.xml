@@ -3,7 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Github/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/activity_chat.xml" value="0.20416666666666666" />
+        <entry key="..\:/Github/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/app_bar_home.xml" value="0.20416666666666666" />
+        <entry key="..\:/Github/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_cart_item.xml" value="0.20416666666666666" />
+        <entry key="..\:/Github/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_category_item.xml" value="0.20416666666666666" />
+        <entry key="..\:/Github/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_message_picture.xml" value="0.18" />
+        <entry key="..\:/Github/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_message_text.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.1175" />
+        <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/activity_chat.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/activity_home.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/activity_tracking_order.xml" value="0.18" />
@@ -28,6 +35,7 @@
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_dialog_order_detail.xml" value="0.33" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_food_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_marker_display.xml" value="0.1" />
+        <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_message_picture.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_order_detail_item.xml" value="0.1" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_order_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_place_order.xml" value="0.33" />
