@@ -25,7 +25,7 @@ public class ChatPictureHolder extends RecyclerView.ViewHolder {
     public TextView txt_chat_message;
     @BindView(R.id.profile_image)
     public CircleImageView profile_image;
-    @BindView(R.id.image_preview)
+    @BindView(R.id.img_preview)
     public ImageView image_preview;
 
     public ChatPictureHolder(@NonNull View itemView) {
