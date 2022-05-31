@@ -338,7 +338,14 @@ public class FoodDetailFragment extends Fragment implements TextWatcher {
 
     private void submitRatingToFirebase(CommentModel commentModel) {
         waitingDialog.show();
-        FirebaseDatabase.getInstance().getReference(Common.COMMENT_REF).child(Common.selectedFood.getId()).push().setValue(commentModel).addOnCompleteListener(task -> {
+        FirebaseDatabase.getInstance()
+                .getReference(Common.RESTAURANT_REF)
+                .child(Common.currentRestaurant.getUid())
+                .child(Common.COMMENT_REF)
+                .child(Common.selectedFood.getId())
+                .push()
+                .setValue(commentModel)
+                .addOnCompleteListener(task -> {
             if(task.isSuccessful())
             {
                 addRatingToFood(commentModel.getRatingValue());
@@ -348,7 +355,14 @@ public class FoodDetailFragment extends Fragment implements TextWatcher {
     }
 
     private void addRatingToFood(float ratingValue) {
-        FirebaseDatabase.getInstance().getReference(Common.CATEGORY_REF).child(Common.categorySelected.getMenu_id()).child("foods").child(Common.selectedFood.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance()
+                .getReference(Common.RESTAURANT_REF)
+                .child(Common.currentRestaurant.getUid())
+                .child(Common.CATEGORY_REF)
+                .child(Common.categorySelected.getMenu_id())
+                .child("foods")
+                .child(Common.selectedFood.getKey())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){

@@ -139,7 +139,9 @@ public class ViewOrdersFragment extends Fragment implements ILoadOrderCallbackLi
                                   Map<String,Object> update_data=new HashMap<>();
                                   update_data.put("orderStatus",-1);
                                   FirebaseDatabase.getInstance()
-                                          .getReference(Common.ORDER_REF)
+                                          .getReference(Common.RESTAURANT_REF)
+                                          .child(Common.currentRestaurant.getUid())
+                                          .child(Common.ORDER_REF)
                                           .child(orderModel.getOrderNumber())
                                           .updateChildren(update_data)
                                           .addOnFailureListener(new OnFailureListener() {
@@ -173,7 +175,9 @@ public class ViewOrdersFragment extends Fragment implements ILoadOrderCallbackLi
                     Toast.makeText(getContext(),orderModel.getOrderNumber(),Toast.LENGTH_SHORT).show();
                     Log.d("OderNumber",orderModel.getOrderNumber());
                     FirebaseDatabase.getInstance()
-                            .getReference(Common.SHIPPING_ORDER_REF)
+                            .getReference(Common.RESTAURANT_REF)
+                            .child(Common.currentRestaurant.getUid())
+                            .child(Common.SHIPPING_ORDER_REF)
                             .child(orderModel.getOrderNumber())
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override

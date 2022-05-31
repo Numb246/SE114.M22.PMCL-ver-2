@@ -49,20 +49,23 @@ public class Common {
     public static final String USER_REFERENCES="Users";
     public static final String POPULAR_CATEGORY_REF ="MostPopular";
     public static final String BEST_DEALS_REF = "BestDeals";
-    public static final int DEFAULT_COLUMN_COUNT = 0;
-    public static final int FULL_WIDTH_COLUMN = 1;
+
     public static final String CATEGORY_REF = "Category";
     public static final String COMMENT_REF = "Comments";
     public static final String ORDER_REF = "Order";
+    public static final String SHIPPING_ORDER_REF = "ShippingOrder";
+
+    public static final int DEFAULT_COLUMN_COUNT = 0;
+    public static final int FULL_WIDTH_COLUMN = 1;
+
     public static final String NOTI_TITLE = "title";
     public static final String NOTI_CONTENT = "content";
-    public static final String IS_SUBSCRIBE_NEWS = "IS_SUBSCRIBE_NEWS";
-    public static final String NEWS_TOPIC = "news";
+
     public static final String IS_SEND_IMAGE = "IS_SEND_IMAGE";
     public static final String IMAGE_URL = "IMAGE_URL";
     public static final String RESTAURANT_REF = "Restaurant";
     private static final String TOKEN_REF = "Tokens";
-    public static final String SHIPPING_ORDER_REF = "ShippingOrder";
+
     public static UserModel currentUser;
     public static CategoryModel categorySelected;
     public static FoodModel selectedFood;
@@ -222,7 +225,11 @@ public class Common {
     }
 
     public static String createTopicOrder() {
-        return new StringBuilder("/topics/new_order").toString();
+        return new StringBuilder("/topics/")
+                .append(Common.currentRestaurant.getUid())
+                .append("_")
+                .append("new_order")
+                .toString();
     }
     public static List<LatLng> decodePoly(String encoded) {
         List<LatLng> poly = new ArrayList<>();
