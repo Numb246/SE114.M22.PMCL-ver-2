@@ -33,6 +33,7 @@ import com.vuquochung.foodapp.Database.CartDatabase;
 import com.vuquochung.foodapp.Database.CartItem;
 import com.vuquochung.foodapp.Database.LocalCartDataSource;
 import com.vuquochung.foodapp.EventBus.CounterCartEvent;
+import com.vuquochung.foodapp.EventBus.MenuItemBack;
 import com.vuquochung.foodapp.Model.OrderModel;
 import com.vuquochung.foodapp.Model.ShippingOrderModel;
 import com.vuquochung.foodapp.R;
@@ -87,9 +88,15 @@ public class ViewOrdersFragment extends Fragment implements ILoadOrderCallbackLi
     }
 
     private void loadOrderFromFirebase() {
-        Log.d("AAAAAAAA",Common.currentUser.getUid());
         List<OrderModel> orderModelList =new ArrayList<>();
-        FirebaseDatabase.getInstance().getReference(Common.ORDER_REF).orderByChild("useId").equalTo(Common.currentUser.getUid()).limitToLast(100).addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance()
+                .getReference(Common.RESTAURANT_REF)
+                .child(Common.currentRestaurant.getUid())
+                .child(Common.ORDER_REF)
+                .orderByChild("useId")
+                .equalTo(Common.currentUser.getUid())
+                .limitToLast(100)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot orderSnapShot:snapshot.getChildren())
@@ -258,5 +265,11 @@ public class ViewOrdersFragment extends Fragment implements ILoadOrderCallbackLi
     public void onStop() {
         compositeDisposable.clear();
         super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().postSticky(new MenuItemBack());
+        super.onDestroy();
     }
 }
