@@ -24,15 +24,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,6 +42,7 @@ import com.google.firebase.storage.UploadTask;
 import com.vuquochung.foodapp.Callback.ILoadTimeFromFirebaseListener;
 import com.vuquochung.foodapp.Common.Common;
 import com.vuquochung.foodapp.EventBus.HideFABCart;
+import com.vuquochung.foodapp.Model.ChatInfoModel;
 import com.vuquochung.foodapp.Model.ChatMessageModel;
 import com.vuquochung.foodapp.Model.OrderModel;
 import com.vuquochung.foodapp.ViewHolder.ChatPictureHolder;
@@ -60,7 +57,8 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.EventListener;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import butterknife.BindView;
@@ -253,7 +251,8 @@ public class ChatActivity extends AppCompatActivity implements ILoadTimeFromFire
                 .child(Common.CHAT_REF);
         offsetRef = database.getReference(".info/serverTimeOffset");
         Query query= chatRef.child(Common.generateChatRoomId(Common.currentRestaurant.getUid(),
-                Common.currentUser.getUid()));
+                Common.currentUser.getUid()))
+                .child(Common.CHAT_DETAIL_REF);
 
         options= new FirebaseRecyclerOptions.Builder<ChatMessageModel>()
                 .setQuery(query,ChatMessageModel.class)
@@ -316,15 +315,15 @@ public class ChatActivity extends AppCompatActivity implements ILoadTimeFromFire
         if(fileUri== null)
         {
             chatMessageModel.setPicture(false);
-            submitChatToFirebase(chatMessageModel, chatMessageModel.isPicture());
+            submitChatToFirebase(chatMessageModel, chatMessageModel.isPicture(),estimateTimeInMs);
         }
         else
         {
-            uploadPicture(fileUri,chatMessageModel);
+            uploadPicture(fileUri,chatMessageModel,estimateTimeInMs);
         }
     }
 
-    private void uploadPicture(Uri fileUri, ChatMessageModel chatMessageModel) {
+    private void uploadPicture(Uri fileUri, ChatMessageModel chatMessageModel,long estimateTimeInMs) {
         if(fileUri != null)
         {
             AlertDialog dialog = new AlertDialog.Builder(ChatActivity.this)
@@ -356,7 +355,7 @@ public class ChatActivity extends AppCompatActivity implements ILoadTimeFromFire
                     chatMessageModel.setPicture(true);
                     chatMessageModel.setPictureLink(url);
 
-                    submitChatToFirebase(chatMessageModel, chatMessageModel.isPicture());
+                    submitChatToFirebase(chatMessageModel, chatMessageModel.isPicture(),estimateTimeInMs);
                 }
             }).addOnFailureListener(e -> {
                Toast.makeText(this,e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -368,27 +367,109 @@ public class ChatActivity extends AppCompatActivity implements ILoadTimeFromFire
 
     }
 
-    private void submitChatToFirebase(ChatMessageModel chatMessageModel, boolean isPicture) {
+    private void submitChatToFirebase(ChatMessageModel chatMessageModel, boolean isPicture,long estimateTimeInMs) {
         chatRef.child(Common.generateChatRoomId(Common.currentRestaurant.getUid(),
                 Common.currentUser.getUid()))
-                .push()
-                .setValue(chatMessageModel)
-                .addOnFailureListener(e -> Toast.makeText(ChatActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show())
-                .addOnCompleteListener(task -> {
-                    if(task.isSuccessful())
-                    {
-                        edt_chat.setText("");
-                        edt_chat.requestFocus();
-                        if(adapter!= null)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists())
                         {
-                            adapter.notifyDataSetChanged();
-                            if(isPicture)
-                            {
-                                fileUri= null;
-                                img_preview.setVisibility(View.GONE);
-                            }
+                            appendChat(chatMessageModel,isPicture,estimateTimeInMs);
+                        }
+                        else
+                        {
+                            createChat(chatMessageModel,isPicture,estimateTimeInMs);
                         }
                     }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(ChatActivity.this,error.getMessage(),Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void appendChat(ChatMessageModel chatMessageModel, boolean isPicture, long estimateTimeInMs) {
+        Map<String,Object> update_data=new HashMap<>();
+        update_data.put("lastUpdate",estimateTimeInMs);
+        if(isPicture)
+            update_data.put("lastMessage","<Image>");
+        else
+            update_data.put("lastMessage",chatMessageModel.getContent());
+        chatRef.child(Common.generateChatRoomId(Common.currentRestaurant.getUid(),
+                Common.currentUser.getUid()))
+                .updateChildren(update_data)
+                .addOnFailureListener(e -> Toast.makeText(ChatActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show())
+                .addOnCompleteListener(task2 -> {
+                    if(task2.isSuccessful())
+                    {
+                        chatRef.child(Common.generateChatRoomId(Common.currentRestaurant.getUid(),
+                                Common.currentUser.getUid()))
+                                .child(Common.CHAT_DETAIL_REF)
+                                .push()
+                                .setValue(chatMessageModel)
+                                .addOnFailureListener(e -> Toast.makeText(ChatActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show())
+                                .addOnCompleteListener(task -> {
+                                    if(task.isSuccessful())
+                                    {
+                                        edt_chat.setText("");
+                                        edt_chat.requestFocus();
+                                        if(adapter!= null)
+                                        {
+                                            adapter.notifyDataSetChanged();
+                                            if(isPicture)
+                                            {
+                                                fileUri= null;
+                                                img_preview.setVisibility(View.GONE);
+                                            }
+                                        }
+                                    }
+                                });
+                    }
+                });
+    }
+
+    private void createChat(ChatMessageModel chatMessageModel, boolean isPicture, long estimateTimeInMs) {
+        ChatInfoModel chatInfoModel =new ChatInfoModel();
+        chatInfoModel.setCreateName(chatMessageModel.getName());
+        if(isPicture)
+            chatInfoModel.setLastMessage("<Image>");
+        else
+            chatInfoModel.setLastMessage(chatMessageModel.getContent());
+        chatInfoModel.setLastUpdate(estimateTimeInMs);
+        chatInfoModel.setCreateDate(estimateTimeInMs);
+
+        chatRef.child(Common.generateChatRoomId(Common.currentRestaurant.getUid(),Common.currentUser.getUid()))
+                .setValue(chatInfoModel)
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                }).addOnCompleteListener(task2 -> {
+                   if(task2.isSuccessful())
+                   {
+                       chatRef.child(Common.generateChatRoomId(Common.currentRestaurant.getUid(),
+                               Common.currentUser.getUid()))
+                               .child(Common.CHAT_DETAIL_REF)
+                               .push()
+                               .setValue(chatMessageModel)
+                               .addOnFailureListener(e -> Toast.makeText(ChatActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show())
+                               .addOnCompleteListener(task -> {
+                                   if(task.isSuccessful())
+                                   {
+                                       edt_chat.setText("");
+                                       edt_chat.requestFocus();
+                                       if(adapter!= null)
+                                       {
+                                           adapter.notifyDataSetChanged();
+                                           if(isPicture)
+                                           {
+                                               fileUri= null;
+                                               img_preview.setVisibility(View.GONE);
+                                           }
+                                       }
+                                   }
+                               });
+                   }
                 });
     }
 
@@ -440,7 +521,7 @@ public class ChatActivity extends AppCompatActivity implements ILoadTimeFromFire
                 }
             }
         }
-        else if( resultCode== MY_RESULT_LOAD_IMG)
+        else if( requestCode== MY_RESULT_LOAD_IMG)
         {
             if (resultCode == RESULT_OK)
             {
