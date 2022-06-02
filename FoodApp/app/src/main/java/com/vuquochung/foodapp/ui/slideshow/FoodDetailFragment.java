@@ -413,27 +413,28 @@ public class FoodDetailFragment extends Fragment implements TextWatcher {
             ratingBar.setRating(foodModel.getRatingValue().floatValue() / foodModel.getRatingCount());
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(Common.selectedFood.getName());
 
-        for(SizeModel sizeModel:Common.selectedFood.getSize())
-        {
-            RadioButton radioButton=new RadioButton(getContext());
-            radioButton.setOnCheckedChangeListener((compoundButton, b) -> {
-                if(b)
-                    Common.selectedFood.setUserSelectedSize(sizeModel);
-                calculateTotalPrice();
-            });
-            LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT,1.0f);
-            radioButton.setLayoutParams(params);
-            radioButton.setText(sizeModel.getName());
-            radioButton.setTag(sizeModel.getPrice());
+        if(Common.selectedFood.getSize() != null) {
+            for (SizeModel sizeModel : Common.selectedFood.getSize()) {
+                RadioButton radioButton = new RadioButton(getContext());
+                radioButton.setOnCheckedChangeListener((compoundButton, b) -> {
+                    if (b)
+                        Common.selectedFood.setUserSelectedSize(sizeModel);
+                    calculateTotalPrice();
+                });
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
+                radioButton.setLayoutParams(params);
+                radioButton.setText(sizeModel.getName());
+                radioButton.setTag(sizeModel.getPrice());
 
-            rdi_group_size.addView(radioButton);
+                rdi_group_size.addView(radioButton);
 
 
-        }
-        if(rdi_group_size.getChildCount()>0)
-        {
-            RadioButton radioButton=(RadioButton) rdi_group_size.getChildAt(0);
-            radioButton.setChecked(true);
+            }
+
+            if (rdi_group_size.getChildCount() > 0) {
+                RadioButton radioButton = (RadioButton) rdi_group_size.getChildAt(0);
+                radioButton.setChecked(true);
+            }
         }
         calculateTotalPrice();
     }
