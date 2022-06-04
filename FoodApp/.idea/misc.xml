@@ -51,8 +51,15 @@
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/menu/cart_menu.xml" value="0.1" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/menu/restaurant_detail_menu.xml" value="0.1" />
         <entry key="..\:/Users/Admin/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.3675" />
+        <entry key="..\:/Users/HUY/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/activity_home.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/HUY/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/app_bar_home.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/HUY/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/content_home.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/HUY/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/fragment_food_detail.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/HUY/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/fragment_food_list.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/HUY/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/HUY/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_cart_item.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/HUY/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/layout_dialog_update_cart.xml" value="0.253125" />
+        <entry key="..\:/Users/HUY/Documents/GitHub/SE114.M22.PMCL-ver-2/FoodApp/app/src/main/res/layout/nav_header_home.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>
