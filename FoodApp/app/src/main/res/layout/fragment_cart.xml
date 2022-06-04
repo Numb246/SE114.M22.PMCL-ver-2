@@ -35,6 +35,35 @@
             android:orientation="vertical"
             android:padding="8dp"
             android:layout_margin="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_weight="8">
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6"
+                        android:id="@+id/edt_discount_code"
+                        android:hint="Enter or scan your code"
+                        android:textColorHint="@color/colorPrimary"/>
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/img_check"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_baseline_check_24"
+                        app:tint="@color/colorPrimary" />
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/img_scan"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_menu_camera"
+                        app:tint="@color/colorPrimary" />
+                </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
