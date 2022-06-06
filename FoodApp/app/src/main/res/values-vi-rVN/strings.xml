@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FoodApp</string>
+    <string name="action_settings">Cài đặt</string>
+    <string name="menu_home">Trang chủ</string>
+    <string name="menu_food_detail">Thông tin món ăn</string>
+    <string name="menu_restaurant">Nhà hàng</string>
+    <string name="popular_categories">Danh mục phổ biến</string>
+    <string name="menu_menu">Danh mục</string>
+    <string name="menu_food_list">Danh sách món ăn</string>
+    <string name="size">Kích thước</string>
+    <string name="add_on">Đồ ăn thêm</string>
+    <string name="menu_cart">Giỏ hàng</string>
+    <string name="sign_out">Đăng xuất</string>
+    <string name="menu_view_orders">Danh sách đặt hàng</string>
+    <string name="update_info" translatable="false">Cập nhập thông tin</string>
+    <string name="menu_subscribe_news" translatable="false">Thông báo</string>
+    <string name="best_deals">Món ăn ngon</string>
+    <string name="title_btn_comment">Hiện thị bình luận</string>
+    <string name="title_cart">GIỎ HÀNG TRỐNG</string>
+    <string name="action_clear_cart">Xóa giỏ hàng</string>
+    <string name="title_edt_name">Tên của bạn</string>
+    <string name="title_edt_address">Địa chị của bạn</string>
+    <string name="title_update_info">Cập nhập thông tin</string>
+    <string name="content_update_info">Vui lòng điền thông tin</string>
+    <string name="update">CẬP NHẬP</string>
+    <string name="cancel">Hủy</string>
+    <string name="message">Tin nhắn của bạn</string>
+    <string name="SignOut">Đăng xuất</string>
+    <string name="message_sign_out">Bạn có muốn đăng xuất không?</string>
+    <string name="OK">Đồng ý</string>
+    <string name="content_rating">Vui lòng viết bình luận của bạn tại đây</string>
+    <string name="rating_food">Đánh giá món ăn</string>
+    <string name="Scan">Nhập mã giảm giá hoặc quét mã QR</string>
+    <string name="Total">Thành tiền: 0,0</string>
+    <string name="PlaceOrder">Đặt hàng</string>
+    <string name="CallShipper">Gọi người giao hàng</string>
+    <string name="Description">Mô tả</string>
+    <string name="Search">Tìm kiếm</string>
+    <string name="OrderDetail">Chi tiết đặt hàng</string>
+    <string name="ShipperName">Tên người giao hàng</string>
+    <string name="ShipperInfo">Thông tin người giao hàng</string>
+    <string name="Quantity">Số lượng: 1</string>
+    <string name="Addon">Món ăn thêm: Default</string>
+    <string name="Size">Kích thước: Medium</string>
+    <string name="OrderNumber">Mã đặt hàng: </string>
+    <string name="OrderComment">Bình luận đơn hàng: </string>
+    <string name="Status">Trạng thái: Đã đặt</string>
+    <string name="DeliveryMethod">Phương thức giao hàng</string>
+    <string name="HomeAddress">Địa chỉ nhà</string>
+    <string name="OtherAddress">Địa chỉ khác</string>
+    <string name="ShipToThisAddress">Giao đến địa chỉ hiện tại</string>
+    <string name="PaymentMethod">Phương thức thanh toán</string>
+    <string name="CashOnDelivery">Thanh toán khi nhận hàng</string>
+    <string name="BrainTree">Thanh toán online</string>
+    <string name="SubscribeNews">Đăng kí nhận tin tức</string>
+    <string name="ContentSub">Bạn có muốn đăng kí nhận tin tức từ nhà hàng?</string>
+    <string name="SEND">Gửi</string>
+
+
+
+</resources>

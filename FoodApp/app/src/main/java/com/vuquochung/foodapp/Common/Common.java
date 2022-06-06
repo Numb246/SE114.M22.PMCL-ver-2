@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
 import com.vuquochung.foodapp.Model.AddonModel;
 import com.vuquochung.foodapp.Model.CategoryModel;
+import com.vuquochung.foodapp.Model.DiscountModel;
 import com.vuquochung.foodapp.Model.FoodModel;
 import com.vuquochung.foodapp.Model.RestaurantModel;
 import com.vuquochung.foodapp.Model.ShippingOrderModel;
@@ -71,6 +72,11 @@ public class Common {
     public static final String RESTAURANT_REF = "Restaurant";
     public static final String CHAT_REF = "Chat";
     public static final String CHAT_DETAIL_REF = "ChatDetail";
+    public static final String QR_CODE_TAG = "QRCode";
+    public static final String DISCOUNT = "Discount";
+    public static final String LOCATION_REF = "Location";
+    public static final float SHIPPING_COST_PER_KM = 1;
+    public static final double MAX_SHIPPING_COST = 30;
     private static final String TOKEN_REF = "Tokens";
 
     public static UserModel currentUser;
@@ -78,6 +84,7 @@ public class Common {
     public static FoodModel selectedFood;
     public static ShippingOrderModel currentShippingOrder;
     public static RestaurantModel currentRestaurant;
+    public static DiscountModel discountApply;
 
     public static String formatPrice(double price) {
         if(price!=0)

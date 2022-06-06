@@ -105,7 +105,7 @@
              android:layout_height="wrap_content"
              android:padding="8dp"
              android:id="@+id/btn_cancel"
-             android:text="Cancel"
+             android:text="@string/cancel"
              android:layout_marginRight="6dp"
              style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
              />
@@ -116,7 +116,7 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:id="@+id/btn_ok"
-            android:text="Ok"
+            android:text="@string/OK"
             android:layout_marginLeft="6dp"
             android:textColor="@android:color/white"
             />

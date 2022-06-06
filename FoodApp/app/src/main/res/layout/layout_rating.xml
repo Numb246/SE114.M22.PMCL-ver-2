@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:id="@+id/edt_comment"
-            android:hint="Please write something"
+            android:hint="@string/content_rating"
             android:maxLines="100"/>
     </com.google.android.material.textfield.TextInputLayout>
 

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content">
         <EditText
             android:id="@+id/edt_name"
-            android:hint="Your Name"
+            android:hint="@string/title_edt_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txt_address_detail"
-        android:text="Your Address"
+        android:text="@string/title_edt_address"
         android:fontFamily="@font/brandon_medium"
         android:textSize="16sp"
         android:textStyle="bold"

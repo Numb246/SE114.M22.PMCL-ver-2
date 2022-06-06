@@ -228,18 +228,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private void showSubscribeNews() {
         Paper.init(this);
         androidx.appcompat.app.AlertDialog.Builder builder= new androidx.appcompat.app.AlertDialog.Builder(this);
-        builder.setTitle("Update Info");
-        builder.setMessage("Do you want to subscribe news from our restaurant");
+        builder.setTitle(R.string.update_info);
+        builder.setMessage(R.string.ContentSub);
 
         View itemView= LayoutInflater.from(this).inflate(R.layout.layout_subcribe_news, null);
         CheckBox ckb_news=(CheckBox) itemView.findViewById(R.id.ckb_subscribe_news);
         boolean isSubscribeNews= Paper.book().read(Common.currentRestaurant.getUid(),false);
         if(isSubscribeNews)
             ckb_news.setChecked(true);
-        builder.setNegativeButton("CANCEL", (dialogInterface, i) -> {
+        builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> {
             dialogInterface.dismiss();
         });
-        builder.setPositiveButton("SEND", (dialogInterface, i) -> {
+        builder.setPositiveButton(R.string.SEND, (dialogInterface, i) -> {
             if(ckb_news.isChecked())
             {
                 Toast.makeText(this,"TOPIC: "+Common.createTopicNews(),Toast.LENGTH_SHORT).show();
@@ -266,8 +266,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void showUpdateInfoDialog() {
         androidx.appcompat.app.AlertDialog.Builder builder= new androidx.appcompat.app.AlertDialog.Builder(this);
-        builder.setTitle("Update Info");
-        builder.setMessage("Please Fill Information");
+        builder.setTitle(R.string.title_update_info);
+        builder.setMessage(R.string.content_update_info);
 
         View itemView= LayoutInflater.from(this).inflate(R.layout.layout_register, null);
 
@@ -296,11 +296,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         edt_phone.setText(Common.currentUser.getPhone());
 
 
-        builder.setNegativeButton("CANCEL", (dialogInterface, which) -> {
+        builder.setNegativeButton(R.string.cancel, (dialogInterface, which) -> {
             dialogInterface.dismiss();
         });
 
-        builder.setPositiveButton("UPDATE", (dialogInterface, which) -> {
+        builder.setPositiveButton(R.string.update, (dialogInterface, which) -> {
             if(placeSelected!=null)
             {
                 if(TextUtils.isEmpty(edt_name.getText().toString()))
@@ -357,14 +357,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void signOut() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Signout")
-                .setMessage("Do you want to sign out?")
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.SignOut)
+                .setMessage(R.string.message_sign_out)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
                     }
-                }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                }).setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Common.selectedFood = null;

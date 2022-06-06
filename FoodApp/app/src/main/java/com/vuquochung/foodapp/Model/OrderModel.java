@@ -6,7 +6,7 @@ import java.util.List;
 
 public class OrderModel {
     private String useId, userName, userPhone, shippingAddress, comment, transactionId;
-    private double lat, lng, totalPayment, finalPayment;
+    private double lat, lng, totalPayment, finalPayment,shippingCost;
     private boolean cod;
     private int discount;
     private long createDate;
@@ -16,6 +16,14 @@ public class OrderModel {
     private List<CartItem> cartItemList;
 
     public OrderModel() {
+    }
+
+    public double getShippingCost() {
+        return shippingCost;
+    }
+
+    public void setShippingCost(double shippingCost) {
+        this.shippingCost = shippingCost;
     }
 
     public String getUseId() {
