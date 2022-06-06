@@ -253,18 +253,18 @@ public class FoodDetailFragment extends Fragment implements TextWatcher {
     }
     private void showDialogRating() {
         androidx.appcompat.app.AlertDialog.Builder builder= new androidx.appcompat.app.AlertDialog.Builder(getContext());
-        builder.setTitle("Rating Food");
-        builder.setMessage("Please Fill Information");
+        builder.setTitle(R.string.rating_food);
+        builder.setMessage(R.string.content_update_info);
 
         View itemView= LayoutInflater.from(getContext()).inflate(R.layout.layout_rating, null);
         RatingBar ratingBar=(RatingBar) itemView.findViewById(R.id.rating_bar_c);
         EditText edt_comment=(EditText) itemView.findViewById(R.id.edt_comment);
 
         builder.setView(itemView);
-        builder.setNegativeButton("CANCEL", (dialogInterface, i) -> {
+        builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> {
             dialogInterface.dismiss();
         });
-        builder.setPositiveButton("OK", (dialogInterface, i) -> {
+        builder.setPositiveButton(R.string.OK, (dialogInterface, i) -> {
             CommentModel commentModel=new CommentModel();
             commentModel.setName(Common.currentUser.getName());
             commentModel.setUid(Common.currentUser.getUid());

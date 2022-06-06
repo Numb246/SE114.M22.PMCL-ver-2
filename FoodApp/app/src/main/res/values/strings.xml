@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">FoodApp</string>
-    <string name="title_activity_home">HomeActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
+    <string name="title_activity_home" translatable="false">HomeActivity</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="nav_header_title" translatable="false">Android Studio</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc" translatable="false">Navigation header</string>
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
+    <string name="menu_gallery" translatable="false">Gallery</string>
     <string name="menu_food_detail">Food Detail</string>
     <string name="menu_restaurant">Restaurant</string>
     <string name="popular_categories">Popular Categories</string>
@@ -22,9 +22,48 @@
     <string name="sign_out">Sign out</string>
     <string name="action_clear_cart">Clear Cart</string>
     <string name="menu_view_orders">View Orders</string>
-    <string name="action_search">Search</string>
+    <string name="action_search" translatable="false">Search</string>
     <string name="update_info">Update Info</string>
-    <string name="google_maps_api">AIzaSyBV_xjwoEw8ulQM9RSA0VlqZ4fT5Rx-jto</string>
-    <string name="title_activity_tracking_order">TrackingOrderActivity</string>
+    <string name="google_maps_api" translatable="false">AIzaSyAE3qO-E0treLxV0lalFj6lgT33CS3QsIM</string>
+    <string name="title_activity_tracking_order" translatable="false">TrackingOrderActivity</string>
     <string name="menu_subscribe_news">News</string>
+    <string name="title_btn_comment">show comment</string>
+    <string name="title_cart">EMPTY CART</string>
+    <string name="title_edt_name">Your Name</string>
+    <string name="title_edt_address">Your Address</string>
+    <string name="title_update_info">Update Info</string>
+    <string name="content_update_info">Please Fill Information</string>
+    <string name="update">UPDATE</string>
+    <string name="cancel">CANCEL</string>
+    <string name="message">Your message</string>
+    <string name="SignOut">Sign out</string>
+    <string name="message_sign_out">Do you want to sign out?</string>
+    <string name="OK">OK</string>
+    <string name="content_rating">Please write something</string>
+    <string name="rating_food">Rating Food</string>
+    <string name="Scan">Enter or scan your code</string>
+    <string name="Total">Total: 0,0</string>
+    <string name="PlaceOrder">Place Order</string>
+    <string name="CallShipper">Call Shipper</string>
+    <string name="Description">Description</string>
+    <string name="Search">Search</string>
+    <string name="OrderDetail">Order Detail</string>
+    <string name="ShipperName">Shipper Name</string>
+    <string name="ShipperInfo">Shipper Info</string>
+    <string name="Quantity">Quantity: 1</string>
+    <string name="Addon">Addon: Default</string>
+    <string name="Size">Size: Medium</string>
+    <string name="OrderNumber">Order number: </string>
+    <string name="OrderComment">Order comment: </string>
+    <string name="Status">Status: Placed</string>
+    <string name="DeliveryMethod">Delivery Method</string>
+    <string name="HomeAddress">Home Address</string>
+    <string name="OtherAddress">Other Address</string>
+    <string name="ShipToThisAddress">Ship to this address</string>
+    <string name="PaymentMethod">Payment Method</string>
+    <string name="CashOnDelivery">Cash On Delivery</string>
+    <string name="BrainTree">BrainTree</string>
+    <string name="SubscribeNews">Subscribe News</string>
+    <string name="ContentSub">Do you want to subscribe news from our restaurant?</string>
+    <string name="SEND">SEND</string>
 </resources>
