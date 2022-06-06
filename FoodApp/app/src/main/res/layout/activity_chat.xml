@@ -62,7 +62,7 @@
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edt_chat"
-                android:hint="Your message"
+                android:hint="@string/message"
                 android:layout_width="0dp"
                 android:layout_weight="10"
                 android:layout_height="wrap_content"

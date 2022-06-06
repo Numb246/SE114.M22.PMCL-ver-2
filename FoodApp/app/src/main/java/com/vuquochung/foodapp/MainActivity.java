@@ -274,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
 
         startActivityForResult(AuthUI.getInstance()
                 .createSignInIntentBuilder()
-                .setLogo(R.drawable.logo)
+                //.setLogo(R.drawable.logo)
                 .setTheme(R.style.LoginTheme)
                 .setAvailableProviders(providers)
                 .build(),APP_REQUEST_CODE);

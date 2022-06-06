@@ -13,17 +13,18 @@
         android:visibility="gone"
         android:id="@+id/recycler_cart"
         android:layout_above="@+id/group_place_holder"/>
+
     <TextView
+        android:id="@+id/txt_empty_cart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_empty_cart"
-        android:text="EMPTY CART"
-        android:fontFamily="@font/brandon_medium"
         android:layout_centerInParent="true"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:textSize="35sp"/>
+        android:fontFamily="@font/brandon_medium"
+        android:text="@string/title_cart"
+        android:textSize="35sp" />
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,7 +46,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="6"
                         android:id="@+id/edt_discount_code"
-                        android:hint="Enter or scan your code"
+                        android:hint="@string/Scan"
                         android:textColorHint="@color/colorPrimary"/>
                     <ImageView
                         android:layout_width="0dp"
@@ -68,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_total_price"
-                android:text="Total: 0,0"
+                android:text="@string/Total"
                 android:fontFamily="@font/brandon_medium"
                 android:layout_centerInParent="true"
                 android:layout_marginStart="8dp"
@@ -79,7 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_place_order"
-                android:text="Place Order"/>
+                android:text="@string/PlaceOrder"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
