@@ -24,7 +24,7 @@
     <string name="menu_view_orders">View Orders</string>
     <string name="action_search" translatable="false">Search</string>
     <string name="update_info">Update Info</string>
-    <string name="google_maps_api" translatable="false">AIzaSyAE3qO-E0treLxV0lalFj6lgT33CS3QsIM</string>
+    <string name="google_maps_api" translatable="false">AIzaSyCGcu_DMCODSgv0PmpvOYlWFBaY48V6a24</string>
     <string name="title_activity_tracking_order" translatable="false">TrackingOrderActivity</string>
     <string name="menu_subscribe_news">News</string>
     <string name="title_btn_comment">show comment</string>
